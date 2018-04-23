@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">popularMoviesStage1</string>
+
+    <string name="connection_error_message">There is a problem with the network connection, please try again!</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="pref_sort_label">Sort by</string>
+    <string name="pref_sort_key">sort</string>
+
+    <string name="pref_sort_popular_option">popular</string>
+    <string name="pref_sort_popular_label">Popular</string>
+    <string name="pref_sort_rating_option">rating</string>
+    <string name="pref_sort_rating_label">Rating</string>
+
+    <string name="poster_content_description">Movie poster</string>
+
+</resources>

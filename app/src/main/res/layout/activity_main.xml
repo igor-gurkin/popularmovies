@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.udacity.popularmoviesstage1.MainActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <GridView
+        android:id="@+id/grid_view_movie"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:columnWidth="140dp"
+        android:numColumns="auto_fit"
+        android:verticalSpacing="4dp"
+        android:horizontalSpacing="4dp"
+        android:stretchMode="columnWidth"
+        android:visibility="invisible"
+        android:gravity="center"
+        android:padding="4dp"/>
+
+    <TextView
+        android:id="@+id/conection_error_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="22sp"
+        android:text="@string/connection_error_message"
+        android:visibility="invisible" />
+
+    <ProgressBar
+        android:id="@+id/download_progress_bar"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_gravity="center"
+        android:visibility="invisible"/>
+
+</FrameLayout>
+
+
