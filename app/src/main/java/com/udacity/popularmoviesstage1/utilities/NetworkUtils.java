@@ -2,6 +2,8 @@ package com.udacity.popularmoviesstage1.utilities;
 
 import android.net.Uri;
 
+import com.udacity.popularmoviesstage1.BuildConfig;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -20,7 +22,7 @@ public class NetworkUtils {
     final static String TOP_RATED_MOVIES = "top_rated";
 
     final static String PARAM_API_KEY = "api_key";
-    final static String API_KEY = "";
+    final static String API_KEY = BuildConfig.API_KEY;
 
     public static URL buildUrl(String preferenceVal) {
         Uri builtUri;

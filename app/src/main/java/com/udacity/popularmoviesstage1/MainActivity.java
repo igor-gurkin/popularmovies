@@ -1,7 +1,10 @@
 package com.udacity.popularmoviesstage1;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager;
@@ -50,10 +53,18 @@ public class MainActivity extends AppCompatActivity implements
         mContentListView = (GridView) findViewById(R.id.grid_view_movie);
 
         if ((savedInstanceState == null) || !savedInstanceState.containsKey(PARCELABLE_KEY)) {
-            loadDataFromPreferences();
+            if (isConnected()) {
+                loadDataFromPreferences();
+            } else {
+                showErrorMessage();
+            }
         } else {
             movieDbResponse = (MovieRecord[]) savedInstanceState.getParcelableArray(PARCELABLE_KEY);
-            showDataView();
+            if (movieDbResponse != null && movieDbResponse.length > 0) {
+                showDataView();
+            } else {
+                showErrorMessage();
+            }
         }
 
         PreferenceManager.getDefaultSharedPreferences(this)
@@ -64,6 +75,17 @@ public class MainActivity extends AppCompatActivity implements
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelableArray(PARCELABLE_KEY, movieDbResponse);
         super.onSaveInstanceState(outState);
+    }
+
+    private boolean isConnected() {
+        boolean isConnected = false;
+        ConnectivityManager cm =
+                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        }
+        return isConnected;
     }
 
     private void loadDataFromPreferences() {
@@ -101,18 +123,20 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void showDataView() {
-        mErrorMessageTextView.setVisibility(View.INVISIBLE);
-        movieRecordsAdapter = new MovieRecordAdapter(this, Arrays.asList(movieDbResponse));
-        mContentListView.setAdapter(movieRecordsAdapter);
-        mContentListView.setVisibility(View.VISIBLE);
-        mContentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                intent.putExtra("object_parcel", movieDbResponse[i]);
-                startActivity(intent);
-            }
-        });
+        if (movieDbResponse != null) {
+            mErrorMessageTextView.setVisibility(View.INVISIBLE);
+            movieRecordsAdapter = new MovieRecordAdapter(this, Arrays.asList(movieDbResponse));
+            mContentListView.setAdapter(movieRecordsAdapter);
+            mContentListView.setVisibility(View.VISIBLE);
+            mContentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                    intent.putExtra("object_parcel", movieDbResponse[i]);
+                    startActivity(intent);
+                }
+            });
+        }
     }
 
     @Override
@@ -214,6 +238,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.pref_sort_key))) {
+            movieDbResponse = null;
             Bundle urlBundle = buildBundle(sharedPreferences.getString(getString(R.string.pref_sort_key),
                     getString(R.string.pref_sort_popular_option)));
             handleLoader(urlBundle);
